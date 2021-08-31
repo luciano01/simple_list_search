@@ -12,11 +12,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends ModularState<HomePage, HomeStore> {
+  bool isSearching = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Simple Search List'),
+        leading: isSearching
+            ? IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    isSearching = !isSearching;
+                  });
+                },
+              )
+            : null,
+        title: isSearching ? _textFormField() : Text('Simple Search List'),
+        actions: [
+          isSearching
+              ? IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {},
+                )
+              : IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      isSearching = !isSearching;
+                    });
+                  },
+                ),
+        ],
       ),
       body: Observer(builder: (_) {
         List<UserModel>? listOfUsers = store.listOfUsers.value;
@@ -47,4 +74,12 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
       }),
     );
   }
+}
+
+Widget _textFormField() {
+  return TextFormField(
+    decoration: InputDecoration(
+      hintText: 'Search user',
+    ),
+  );
 }
