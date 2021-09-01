@@ -11,42 +11,17 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ModularState<HomePage, HomeStore> {
-  bool isSearching = false;
+class _HomePageState extends State<HomePage> {
+  final store = Modular.get<HomeStore>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: isSearching
-            ? IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  setState(() {
-                    isSearching = !isSearching;
-                  });
-                },
-              )
-            : null,
-        title: isSearching ? _textFormField() : Text('Simple Search List'),
-        actions: [
-          isSearching
-              ? IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {},
-                )
-              : IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    setState(() {
-                      isSearching = !isSearching;
-                    });
-                  },
-                ),
-        ],
+        title: Text('Simple Search List'),
       ),
       body: Observer(builder: (_) {
-        List<UserModel>? listOfUsers = store.listOfUsers.value;
+        List<UserModel>? listOfUsers = store.filterList;
         var error = store.listOfUsers.error;
 
         if (listOfUsers == null || listOfUsers.isEmpty) {
@@ -61,25 +36,45 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
           );
         }
 
-        return ListView.builder(
-          itemCount: listOfUsers.length,
-          itemBuilder: (context, index) {
-            UserModel? user = listOfUsers[index];
-            return ListTile(
-              title: Text('${user.name!.first!} ${user.name!.last!}'),
-              subtitle: Text(user.email!),
-            );
-          },
+        return ListView(
+          children: [
+            _searchField(
+              onChanged: store.setTextToSearch,
+            ),
+            ListView.builder(
+              itemCount: listOfUsers.length,
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                UserModel? user = listOfUsers[index];
+                return ListTile(
+                  title: Text('${user.name!.first!} ${user.name!.last!}'),
+                  subtitle: Text(user.email!),
+                );
+              },
+            ),
+          ],
         );
       }),
     );
   }
 }
 
-Widget _textFormField() {
-  return TextFormField(
-    decoration: InputDecoration(
-      hintText: 'Search user',
+Widget _searchField({
+  void Function(String)? onChanged,
+}) {
+  return Padding(
+    padding: EdgeInsets.all(16),
+    child: TextFormField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 10,
+        ),
+        hintText: 'Search user',
+      ),
+      onChanged: onChanged,
     ),
   );
 }

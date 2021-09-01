@@ -14,8 +14,28 @@ abstract class HomeStoreBase with Store {
   }
 
   @observable
+  String? textToSearch;
+
+  @action
+  setTextToSearch(String? value) => textToSearch = value;
+
+  @computed
+  List<UserModel>? get filterList {
+    if (textToSearch == null) {
+      return listOfUsers.value;
+    } else {
+      return listOfUsers.value!
+          .where((value) => value.name!.first!
+              .toLowerCase()
+              .contains(textToSearch!.toLowerCase()))
+          .toList();
+    }
+  }
+
+  @observable
   ObservableFuture<List<UserModel>?> listOfUsers = ObservableFuture.value([]);
 
+  @action
   getUsers() async {
     listOfUsers = _repository.getUsers().asObservable();
   }
