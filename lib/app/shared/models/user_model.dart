@@ -1,19 +1,19 @@
 class UserModel {
   UserModel({
-    this.gender,
-    this.name,
-    this.email,
-    this.phone,
-    this.cell,
-    this.nat,
+    required this.gender,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.cell,
+    required this.nat,
   });
 
-  String? gender;
-  Name? name;
-  String? email;
-  String? phone;
-  String? cell;
-  String? nat;
+  final String gender;
+  final Name name;
+  final String email;
+  final String phone;
+  final String cell;
+  final String nat;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         gender: json["gender"],
@@ -39,14 +39,14 @@ class UserModel {
 
 class Name {
   Name({
-    this.title,
-    this.first,
-    this.last,
+    required this.title,
+    required this.first,
+    required this.last,
   });
 
-  String? title;
-  String? first;
-  String? last;
+  final String title;
+  final String first;
+  final String last;
 
   factory Name.fromJson(Map<String, dynamic> json) => Name(
         title: json["title"],

@@ -1,5 +1,5 @@
-import 'package:simple_list_search/app/shared/repository/app_repository.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:simple_list_search/app/shared/repository/app_repository.dart';
 
 import 'modules/home/home_module.dart';
 
